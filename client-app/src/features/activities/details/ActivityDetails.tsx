@@ -4,14 +4,14 @@ import { IActivity } from '../../../app/models/IActivity'
 
 interface IProps {
     activity: IActivity;
-    setEditMode: (editMode: boolean) => void;
-    selectActivity: (activiy: string | null) => void;
+    openEditForm: (id: string) => void;
+    close: () => void;
 }
 
 export const ActivityDetails: React.FC<IProps> = ({
     activity, 
-    setEditMode, 
-    selectActivity 
+    openEditForm, 
+    close 
 }) => {
     return (
         <Card fluid>
@@ -28,13 +28,13 @@ export const ActivityDetails: React.FC<IProps> = ({
             <Card.Content extra>
                 <Button.Group widths={2}>
                     <Button 
-                        onClick={() => setEditMode(true)} 
+                        onClick={() => openEditForm(activity.id)} 
                         basic 
                         color='blue' 
                         content='Edit'
                     />
                     <Button 
-                        onClick={() => selectActivity(null)} 
+                        onClick={close} 
                         basic 
                         color='grey' 
                         content='Cancel'

@@ -4,7 +4,7 @@ import { IActivity } from '../../../app/models/IActivity'
 import { v4 as uuid } from 'uuid';
 
 interface IProps {
-    setEditMode: (editMode: boolean) => void;
+    closeEditForm: () => void;
     activity: IActivity | null;
     createActivity: (activity: IActivity) => void;
     editActivity: (activity: IActivity) => void;
@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export const ActivityForm: React.FC<IProps> = ({
-    setEditMode, 
+    closeEditForm, 
     activity: initialValues, 
     createActivity, 
     editActivity,
@@ -106,7 +106,7 @@ export const ActivityForm: React.FC<IProps> = ({
                     content='Submit'
                 />
                 <Button 
-                    onClick={() => setEditMode(false)} 
+                    onClick={closeEditForm} 
                     floated='right' 
                     type='button' 
                     content='Cancel'

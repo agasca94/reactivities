@@ -1,5 +1,5 @@
 import axios, {AxiosResponse } from 'axios';
-import { IActivity } from '../app/models/IActivity';
+import { IActivity } from '../models/IActivity';
 
 const ms = 1000;
 
