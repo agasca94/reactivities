@@ -1,6 +1,7 @@
 import React from 'react'
 import { IActivity } from '../../../app/models/IActivity'
 import { Segment, Item, Button, Label } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 interface IProps {
     activities: IActivity[];
@@ -31,6 +32,8 @@ export const ActivityList: React.FC<IProps> = ({
                             </Item.Description>
                             <Item.Extra>
                                 <Button 
+                                    as={Link}
+                                    to={`/activities/${activity.id}`}
                                     onClick={() => selectActivity(activity.id)} 
                                     floated='right' 
                                     content='View' 

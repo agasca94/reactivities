@@ -1,18 +1,18 @@
 import React from 'react'
 import { Card, Image, Button } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/IActivity'
+import { Link } from 'react-router-dom'
 
 interface IProps {
     activity: IActivity;
-    openEditForm: (id: string) => void;
     close: () => void;
 }
 
 export const ActivityDetails: React.FC<IProps> = ({
     activity, 
-    openEditForm, 
     close 
 }) => {
+
     return (
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} wrapped ui={false}/>
@@ -28,7 +28,8 @@ export const ActivityDetails: React.FC<IProps> = ({
             <Card.Content extra>
                 <Button.Group widths={2}>
                     <Button 
-                        onClick={() => openEditForm(activity.id)} 
+                        as={Link}
+                        to={`/edit/${activity.id}`}
                         basic 
                         color='blue' 
                         content='Edit'
