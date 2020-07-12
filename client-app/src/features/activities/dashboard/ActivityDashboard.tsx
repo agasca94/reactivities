@@ -9,7 +9,7 @@ import { LoadingComponent } from '../../../app/layout/LoadingComponent';
 const ActivityDashboard = () => {
     const activityStore = useContext(ActivityStore);
     const { 
-        activitiesByDate: activities,
+        activitiesByDate,
         selectActivity, 
         loadActivities,
         loadingInitial,
@@ -28,11 +28,8 @@ const ActivityDashboard = () => {
         <Grid>
             <Grid.Column width={10}>
                 <ActivityList 
-                    activities={activities} 
+                    activitiesByDate={activitiesByDate} 
                     selectActivity={selectActivity}
-                    deleteActivity={deleteActivity}
-                    submitting={submitting}
-                    target={target}
                 />
             </Grid.Column>
             <Grid.Column width={6}>

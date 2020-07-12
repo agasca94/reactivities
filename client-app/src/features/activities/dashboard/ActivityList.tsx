@@ -1,57 +1,35 @@
-import React from 'react'
-import { IActivity } from '../../../app/models/IActivity'
-import { Segment, Item, Button, Label } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { IActivity } from '../../../app/models/IActivity';
+import { Segment, Item, Label } from 'semantic-ui-react';
+import { ActivityListItem } from './ActivityListItem';
 
 interface IProps {
-    activities: IActivity[];
+    activitiesByDate: [string, IActivity[]][];
     selectActivity: (id: string) => void;
-    deleteActivity: (id: string) => void;
-    submitting: boolean;
-    target: string;
 }
 
 export const ActivityList: React.FC<IProps> = ({ 
-    activities, 
-    selectActivity, 
-    deleteActivity,
-    submitting,
-    target
+    activitiesByDate, 
+    selectActivity,
 }) => {
     return (
-        <Segment clearing>
-            <Item.Group divided>
-                {activities.map(activity => (
-                    <Item key={activity.id}>
-                        <Item.Content>
-                            <Item.Header as='a'>{activity.title}</Item.Header>
-                            <Item.Meta>{activity.date}</Item.Meta>
-                            <Item.Description>
-                                <div>{activity.description}</div>
-                                <div>{activity.city}, {activity.venue}</div>
-                            </Item.Description>
-                            <Item.Extra>
-                                <Button 
-                                    as={Link}
-                                    to={`/activities/${activity.id}`}
-                                    onClick={() => selectActivity(activity.id)} 
-                                    floated='right' 
-                                    content='View' 
-                                    color='blue'
-                                />
-                                <Button 
-                                    loading={submitting && target === activity.id}
-                                    onClick={() => deleteActivity(activity.id)} 
-                                    floated='right' 
-                                    content='Delete' 
-                                    color='red'
-                                />
-                                <Label basic content={activity.category}/>
-                            </Item.Extra>
-                        </Item.Content>
-                    </Item>
-                ))}
-            </Item.Group>
-        </Segment>
+        <>
+        {activitiesByDate.map(([date, activities]) => (
+            <React.Fragment key={date}>
+                <Label size='large' color='blue'>
+                    {date}
+                </Label>
+                <Item.Group divided>
+                    {activities.map(activity => (
+                        <ActivityListItem
+                            key={activity.id}
+                            activity={activity}
+                            selectActivity={selectActivity}
+                        />
+                    ))}
+                </Item.Group>   
+            </React.Fragment>
+        ))}
+        </>
     )
 }
