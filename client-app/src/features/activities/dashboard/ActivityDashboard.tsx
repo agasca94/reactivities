@@ -13,9 +13,6 @@ const ActivityDashboard = () => {
         selectActivity, 
         loadActivities,
         loadingInitial,
-        deleteActivity,
-        submitting,
-        target,
     } = activityStore;
 
     React.useEffect(() => {

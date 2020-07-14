@@ -6,14 +6,23 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history'
 import ScrollToTop from './app/layout/ScrollToTop';
 
+import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-widgets/dist/css/react-widgets.css';
+
+import Moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+
+Moment.locale('en');
+momentLocalizer();
+
 export const history = createBrowserHistory();
 
 ReactDOM.render(
     <Router history={history}>
         <ScrollToTop>
-            <React.StrictMode>
+            {/*<React.StrictMode>*/}
                 <App />
-            </React.StrictMode>
+            {/*</React.StrictMode>*/}
         </ScrollToTop>
     </Router>,
     document.getElementById('root')

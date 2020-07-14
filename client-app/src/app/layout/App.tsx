@@ -8,8 +8,6 @@ import { HomePage } from '../../features/home/HomePage';
 import ActivityDetailsContainer from '../../features/activities/details/ActivityDetailsContainer';
 import ActivityFormContainer from '../../features/activities/form/ActivityFormContainer';
 import NotFound from './NotFound';
-
-import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 
 const App = () => {

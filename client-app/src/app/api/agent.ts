@@ -29,6 +29,8 @@ axios.interceptors.response.use(
         if (status === 500) {
             toast.error('Server error!');
         }
+
+        throw error;
     }
 );
 

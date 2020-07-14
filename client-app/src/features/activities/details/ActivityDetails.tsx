@@ -1,7 +1,6 @@
 import React from 'react'
-import { Card, Image, Button, Grid } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/IActivity'
-import { Link } from 'react-router-dom'
 import { ActivityDetailedHeader } from './ActivityDetailedHeader'
 import { ActivityDetailedInfo } from './ActivityDetailedInfo'
 import { ActivityDetailedChat } from './ActivityDetailedChat'

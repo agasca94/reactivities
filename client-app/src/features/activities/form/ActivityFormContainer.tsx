@@ -4,6 +4,7 @@ import { ActivityForm } from './ActivityForm';
 import { observer } from 'mobx-react-lite';
 import { useParams, useHistory } from 'react-router-dom';
 import { IActivity } from '../../../app/models/IActivity';
+import { toast } from 'react-toastify';
 
 const ActivityFormContainer = () => {
     const activityStore = useContext(ActivityStore);
@@ -13,6 +14,7 @@ const ActivityFormContainer = () => {
         createActivity, 
         editActivity, 
         loadActivity,
+        loadingInitial,
         submitting
     } = activityStore;
     const { id } = useParams();
@@ -21,8 +23,9 @@ const ActivityFormContainer = () => {
     React.useEffect(() => {
         if (id) {
             loadActivity(id);
+        } else {
+            selectActivity(null);
         }
-
         return () => {
             selectActivity(null);
         }
@@ -32,8 +35,12 @@ const ActivityFormContainer = () => {
         const saveActivity = edit ? editActivity : createActivity;
 
         saveActivity(activity)
-            .then(() => {
-                history.push(`/activities/${activity.id}`);
+            .then(err => {
+                console.log(err)
+                if (!err)
+                    history.push(`/activities/${activity.id}`);
+                else
+                    toast.error('Problem submitting data');
             });
     }   
 
@@ -41,10 +48,15 @@ const ActivityFormContainer = () => {
         <ActivityForm
             key={activity?.id || 0}
             activity={activity}
-            closeEditForm={() => history.push('/activities')}
+            closeEditForm={
+                activity?.id 
+                    ? () => history.push(`/activities/${activity.id}`) 
+                    : () => history.push('/activities')
+            }
             createActivity={a => handleSaveActivity(a, false)}
             editActivity={a => handleSaveActivity(a, true)}
             submitting={submitting}
+            loading={loadingInitial}
         />
     )
 }

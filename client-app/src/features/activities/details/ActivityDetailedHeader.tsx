@@ -1,6 +1,8 @@
 import React from 'react'
 import { Segment, Item, Header, Button, Image } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/IActivity';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 const activityImageStyle = {
     filter: 'brightness(30%)'
@@ -37,7 +39,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = ({activity}) => {
                                 content={activity.title}
                                 style={{ color: 'white' }}
                             />
-                            <p>{activity.date}</p>
+                            <p>{moment(activity.date).format('dddd Do MMMM')}</p>
                             <p>
                                 Hosted by <strong>Bob</strong>
                             </p>
@@ -49,7 +51,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = ({activity}) => {
             <Segment clearing attached='bottom'>
                 <Button color='teal'>Join Activity</Button>
                 <Button>Cancel attendance</Button>
-                <Button color='orange' floated='right'>
+                <Button as={Link} to={`/edit/${activity.id}`} color='orange' floated='right'>
                     Manage Event
                 </Button>
             </Segment>

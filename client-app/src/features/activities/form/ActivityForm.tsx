@@ -1,7 +1,28 @@
 import React, { FormEvent } from 'react'
 import { Segment, Form, Button, Grid } from 'semantic-ui-react'
-import { IActivity } from '../../../app/models/IActivity'
+import { IActivity, IActivityFormValues } from '../../../app/models/IActivity'
 import { v4 as uuid } from 'uuid';
+import { Form as FinalForm, Field } from 'react-final-form'
+import { TextInput } from '../../../app/common/form/TextInput';
+import { DateInput } from '../../../app/common/form/DateInput';
+import { TextAreaInput } from '../../../app/common/form/TextAreaInput';
+import { SelectInput } from '../../../app/common/form/SelectInput';
+import { category } from '../../../app/common/options/categoryOptions';
+import { combineDateAndTime } from '../../../app/common/utils';
+import { combineValidators, isRequired, composeValidators, hasLengthGreaterThan } from 'revalidate';
+
+const validate = combineValidators({
+    title: isRequired({message: 'The event title is required'}),
+    category: isRequired('Category'),
+    description: composeValidators(
+        isRequired('Description'),
+        hasLengthGreaterThan(4)({message: 'Descriptions need to be at least 5 characters'})
+    )(),
+    city: isRequired('City'),
+    venue: isRequired('Venue'),
+    date: isRequired('Date'),
+    time: isRequired('Time')
+});
 
 interface IProps {
     closeEditForm: () => void;
@@ -9,6 +30,7 @@ interface IProps {
     createActivity: (activity: IActivity) => void;
     editActivity: (activity: IActivity) => void;
     submitting: boolean;
+    loading: boolean;
 }
 
 export const ActivityForm: React.FC<IProps> = ({
@@ -16,35 +38,34 @@ export const ActivityForm: React.FC<IProps> = ({
     activity: initialValues, 
     createActivity, 
     editActivity,
-    submitting
+    submitting,
+    loading
 }) => {
 
     const initializeForm = () => {
         if (initialValues) {
-            return initialValues;
+            return {
+                ...initialValues,
+                time: initialValues.date
+            };
         }
         return {
             id: '',
             title: '',
             category: '',
             description: '',
-            date: '',
             city: '',
             venue: ''
         };
     };
 
-    const [activity, setActivity] = React.useState<IActivity>(initializeForm);
+    const [activity, setActivity] = React.useState<IActivityFormValues>(initializeForm);
 
-    const handleInputChange = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = event.currentTarget;
-        setActivity(activity => ({
-            ...activity,
-            [name]: value
-        }));
-    }
-
-    const handleSubmit = () => {
+    const handleFinalFormSubmit = (values: any) => {
+        const { date, time, ...activity } = values;
+        const dateTime = combineDateAndTime(date, time);
+        activity.date = dateTime;
+        
         if (activity.id){
             editActivity(activity);
         } else {
@@ -60,60 +81,79 @@ export const ActivityForm: React.FC<IProps> = ({
         <Grid>
             <Grid.Column width={10}>
                 <Segment clearing>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Input 
-                            onChange={handleInputChange}
-                            name='title'
-                            placeholder='Title' 
-                            value={activity.title}
-                        />
-                        <Form.TextArea 
-                            onChange={handleInputChange}
-                            name='description'
-                            rows={2} 
-                            placeholder='Description' 
-                            value={activity.description}
-                        />
-                        <Form.Input 
-                            onChange={handleInputChange}
-                            name='category'
-                            placeholder='Category' 
-                            value={activity.category}
-                        />
-                        <Form.Input 
-                            onChange={handleInputChange}
-                            name='date'
-                            type='datetime-local' 
-                            placeholder='Date' 
-                            value={activity.date}
-                        />
-                        <Form.Input 
-                            onChange={handleInputChange}
-                            name='city'
-                            placeholder='City' 
-                            value={activity.city}
-                        />
-                        <Form.Input 
-                            onChange={handleInputChange}
-                            name='venue'
-                            placeholder='Venue' 
-                            value={activity.venue}
-                        />
+                    <FinalForm
+                        validate={validate}
+                        initialValues={activity}
+                        onSubmit={handleFinalFormSubmit}
+                        render={({ handleSubmit, invalid, pristine }) => (
+                            <Form onSubmit={handleSubmit} loading={loading}>
+                                <Field  
+                                    name='title'
+                                    placeholder='Title' 
+                                    value={activity.title}
+                                    component={TextInput}
+                                />
+                                <Field
+                                    name='description'
+                                    placeholder='Description' 
+                                    rows={3}
+                                    value={activity.description}
+                                    component={TextAreaInput}
+                                />
+                                <Field
+                                    name='category'
+                                    placeholder='Category' 
+                                    value={activity.category}
+                                    component={SelectInput}
+                                    options={category}
+                                />
+                                <Form.Group widths='equal'>
+                                    <Field
+                                        name='date'
+                                        time={false}
+                                        placeholder='Date' 
+                                        value={activity.date}
+                                        component={DateInput}
+                                    />
+                                    <Field
+                                        name='time'
+                                        date={false}
+                                        placeholder='Time' 
+                                        value={activity.time}
+                                        component={DateInput}
+                                    />
+                                </Form.Group>
+                                <Field
+                                    name='city'
+                                    placeholder='City' 
+                                    value={activity.city}
+                                    component={TextInput}
+                                />
+                                <Field
+                                    name='venue'
+                                    placeholder='Venue' 
+                                    value={activity.venue}
+                                    component={TextInput}
+                                />
 
-                        <Button 
-                            loading={submitting}
-                            floated='right' 
-                            positive 
-                            type='submit' 
-                            content='Submit'
-                        />
-                        <Button 
-                            onClick={closeEditForm} 
-                            floated='right' 
-                            type='button' 
-                            content='Cancel'
-                        />
-                    </Form>
+                                <Button 
+                                    loading={loading || submitting}
+                                    floated='right' 
+                                    disabled={invalid || pristine}
+                                    positive 
+                                    type='submit' 
+                                    content='Submit'
+                                />
+                                <Button
+                                    loading={loading || submitting}
+                                    onClick={closeEditForm} 
+                                    floated='right' 
+                                    type='button' 
+                                    content='Cancel'
+                                />
+                            </Form>
+                        )}
+                    />
                 </Segment>
             </Grid.Column>
         </Grid>
