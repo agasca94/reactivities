@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace Persistence 
 {
@@ -130,10 +132,45 @@ namespace Persistence
             context.SaveChanges();
         }
 
-        public static void Initialize(DataContext context)
+        private static async Task seedUsers(UserManager<AppUser> userManager)
+        {
+            if (userManager.Users.Any())
+            {
+                return;
+            }
+            
+            var users = new List<AppUser>
+            {
+                new AppUser
+                {
+                    DisplayName = "Bob",
+                    UserName = "bob",
+                    Email = "bob@test.com"
+                },
+                new AppUser
+                {
+                    DisplayName = "Tom",
+                    UserName = "tom",
+                    Email = "tom@test.com"
+                },
+                new AppUser
+                {
+                    DisplayName = "Jane",
+                    UserName = "jane",
+                    Email = "jane@test.com"
+                }
+            };
+            foreach (var user in users)
+            {
+                await userManager.CreateAsync(user, "1ronM4id3n9009@");
+            }
+        }
+
+        public static void Initialize(DataContext context, UserManager<AppUser> userManager)
         {
             seedActivities(context);
             seedValues(context);
+            seedUsers(userManager).Wait();
         }
     }
 }

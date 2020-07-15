@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +24,8 @@ namespace Api
                 try
                 {
                     var context = services.GetRequiredService<DataContext>();
-                    DbInitializer.Initialize(context);
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    DbInitializer.Initialize(context, userManager);
                 }
                 catch (Exception ex)
                 {
