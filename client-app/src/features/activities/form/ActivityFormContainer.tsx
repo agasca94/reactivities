@@ -1,13 +1,13 @@
 import React, { useContext } from 'react'
-import ActivityStore from '../../../app/stores/activityStore'
 import { ActivityForm } from './ActivityForm';
 import { observer } from 'mobx-react-lite';
 import { useParams, useHistory } from 'react-router-dom';
 import { IActivity } from '../../../app/models/IActivity';
 import { toast } from 'react-toastify';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const ActivityFormContainer = () => {
-    const activityStore = useContext(ActivityStore);
+    const rootStore = useContext(RootStoreContext);
     const {
         activity, 
         selectActivity,
@@ -16,7 +16,7 @@ const ActivityFormContainer = () => {
         loadActivity,
         loadingInitial,
         submitting
-    } = activityStore;
+    } = rootStore.activityStore;
     const { id } = useParams();
     const history = useHistory();
 

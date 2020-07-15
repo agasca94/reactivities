@@ -2,6 +2,7 @@ import React from 'react';
 import { IActivity } from '../../../app/models/IActivity';
 import { Item, Label } from 'semantic-ui-react';
 import { ActivityListItem } from './ActivityListItem';
+import moment from 'moment';
 
 interface IProps {
     activitiesByDate: [string, IActivity[]][];
@@ -17,7 +18,7 @@ export const ActivityList: React.FC<IProps> = ({
         {activitiesByDate.map(([date, activities]) => (
             <React.Fragment key={date}>
                 <Label size='large' color='blue'>
-                    {date}
+                    {moment(date).format('dddd Do MMMM')}
                 </Label>
                 <Item.Group divided>
                     {activities.map(activity => (

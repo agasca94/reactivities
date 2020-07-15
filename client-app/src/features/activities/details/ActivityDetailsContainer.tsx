@@ -1,17 +1,17 @@
 import React, { useContext } from 'react'
 import { ActivityDetails } from './ActivityDetails';
-import ActivityStore from '../../../app/stores/activityStore'
 import { useParams, useHistory } from 'react-router-dom';
 import { LoadingComponent } from '../../../app/layout/LoadingComponent';
 import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const ActivityDetailsContainer = () => {
-    const activityStore = useContext(ActivityStore);
+    const rootStore = useContext(RootStoreContext);
     const { 
         activity, 
         loadActivity,
         loadingInitial
-    } = activityStore;
+    } = rootStore.activityStore;
     
     const { id } = useParams();
     const history = useHistory();

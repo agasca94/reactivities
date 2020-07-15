@@ -1,13 +1,16 @@
-import { observable, action, computed, configure, runInAction } from 'mobx';
-import { createContext } from 'react';
+import { observable, action, computed, runInAction } from 'mobx';
 import { IActivity } from '../models/IActivity';
 import agent from '../api/agent';
 
 import 'mobx-react-lite/batchingForReactDom'
+import { RootStore } from './rootStore';
 
-configure({ enforceActions: 'always' });
+export default class ActivityStore {
+    rootStore: RootStore;
+    constructor (rootStore: RootStore) {
+        this.rootStore = rootStore;
+    }
 
-class ActivityStore {
     @observable activityRegistry = new Map();
     @observable activity: IActivity | null = null;
     @observable loadingInitial = false;
@@ -147,5 +150,3 @@ class ActivityStore {
         return this.activityRegistry.get(id);
     }
 }
-
-export default createContext(new ActivityStore());

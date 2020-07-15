@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import React from 'react'
 import { Segment, Form, Button, Grid } from 'semantic-ui-react'
 import { IActivity, IActivityFormValues } from '../../../app/models/IActivity'
 import { v4 as uuid } from 'uuid';
@@ -59,7 +59,7 @@ export const ActivityForm: React.FC<IProps> = ({
         };
     };
 
-    const [activity, setActivity] = React.useState<IActivityFormValues>(initializeForm);
+    const [activity, ] = React.useState<IActivityFormValues>(initializeForm);
 
     const handleFinalFormSubmit = (values: any) => {
         const { date, time, ...activity } = values;
@@ -85,7 +85,7 @@ export const ActivityForm: React.FC<IProps> = ({
                         validate={validate}
                         initialValues={activity}
                         onSubmit={handleFinalFormSubmit}
-                        render={({ handleSubmit, invalid, pristine }) => (
+                        render={({ handleSubmit, invalid, pristine }) => 
                             <Form onSubmit={handleSubmit} loading={loading}>
                                 <Field  
                                     name='title'
@@ -152,7 +152,7 @@ export const ActivityForm: React.FC<IProps> = ({
                                     content='Cancel'
                                 />
                             </Form>
-                        )}
+                        }
                     />
                 </Segment>
             </Grid.Column>

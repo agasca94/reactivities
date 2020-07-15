@@ -1,8 +1,20 @@
 import React from 'react'
-import { Menu, Container, Button } from 'semantic-ui-react'
-import { NavLink } from 'react-router-dom'
+import { Menu, Container, Button, Dropdown, Image } from 'semantic-ui-react'
+import { NavLink, Link, useHistory } from 'react-router-dom'
+import { IUser } from '../models/IUser'
 
-export const NavBar = () => {
+interface IProps {
+    logout: () => void;
+    isLoggedIn: boolean;
+    user: IUser | null;
+}
+
+export const NavBar: React.FC<IProps> = ({ logout, isLoggedIn, user }) => {
+    const history = useHistory();
+    const handleLogout = () => {
+        logout();
+        history.push('/');
+    }
     return (
         <Menu fixed='top' inverted>
             <Container>
@@ -23,6 +35,18 @@ export const NavBar = () => {
                         content='"Create Activity'
                     />
                 </Menu.Item>
+
+                {user && 
+                    <Menu.Item position='right'>
+                        <Image avatar spaced='right' src={user.image || '/assets/user.png'} />
+                        <Dropdown pointing='top left' text={user.displayName}>
+                            <Dropdown.Menu>
+                                <Dropdown.Item as={Link} to={`/profile/${user.username}`} text='My profile' icon='user'/>
+                                <Dropdown.Item onClick={handleLogout} text='Logout' icon='power' />
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Menu.Item>
+                } 
             </Container>
         </Menu>
     )
