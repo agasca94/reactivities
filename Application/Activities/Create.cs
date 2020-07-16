@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
+using Application.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Activities
@@ -37,7 +40,12 @@ namespace Application.Activities
 
         public class Handler : CommandHandler<Command>
         {
-            public Handler(DataContext context) : base(context) {}
+            private readonly IUserAccessor userAccessor;
+
+            public Handler(IUserAccessor userAccessor, DataContext context) : base(context)
+            {
+                this.userAccessor = userAccessor;
+            }
 
             public override async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
@@ -51,14 +59,23 @@ namespace Application.Activities
                     City = request.City,
                     Venue = request.Venue
                 };
-
                 context.Add(activity);
+
+                var user = await context.Users.SingleOrDefaultAsync(
+                    x => x.UserName == userAccessor.GetCurrentUsername()
+                );
+                var attendee = new UserActivity
+                {
+                    AppUser = user,
+                    Activity = activity,
+                    IsHost = true,
+                    DateJoined = DateTime.Now
+                };
+                context.Add(attendee);
+
                 var success = await context.SaveChangesAsync() > 0;
 
-                if (success)
-                {
-                    return Unit.Value;
-                }
+                if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
             }

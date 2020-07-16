@@ -25,7 +25,7 @@ namespace Api
                 {
                     var context = services.GetRequiredService<DataContext>();
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                    DbInitializer.Initialize(context, userManager);
+                    DbInitializer.SeedData(context, userManager).Wait();
                 }
                 catch (Exception ex)
                 {
