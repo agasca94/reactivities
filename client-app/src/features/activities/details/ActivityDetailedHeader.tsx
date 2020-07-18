@@ -18,15 +18,27 @@ const activityImageTextStyle = {
 };
 
 interface IProps {
-    activity: IActivity
+    activity: IActivity;
+    attendActivity: () => void;
+    cancelAttendance: () => void;
+    submitting: boolean;
 }
 
-export const ActivityDetailedHeader: React.FC<IProps> = ({activity}) => {
+export const ActivityDetailedHeader: React.FC<IProps> = ({ 
+    activity, 
+    submitting,
+    cancelAttendance, 
+    attendActivity 
+}) => {
+    const host = activity.attendees.find(
+        attendee => attendee.isHost
+    );
+
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
                 <Image 
-                    src={`/assets/categoryImages/${activity.category}.jpg`} 
+                    src={`/assets/categoryImages/${activity.category.toLowerCase()}.jpg`} 
                     fluid 
                     style={activityImageStyle}
                 />
@@ -41,7 +53,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = ({activity}) => {
                             />
                             <p>{moment(activity.date).format('dddd Do MMMM')}</p>
                             <p>
-                                Hosted by <strong>Bob</strong>
+                                Hosted by <strong>{host?.displayName}</strong>
                             </p>
                             </Item.Content>
                         </Item>
@@ -49,11 +61,15 @@ export const ActivityDetailedHeader: React.FC<IProps> = ({activity}) => {
                 </Segment>
             </Segment>
             <Segment clearing attached='bottom'>
-                <Button color='teal'>Join Activity</Button>
-                <Button>Cancel attendance</Button>
-                <Button as={Link} to={`/edit/${activity.id}`} color='orange' floated='right'>
-                    Manage Event
-                </Button>
+                {activity.isHost ? (
+                    <Button as={Link} to={`/edit/${activity.id}`} color='orange' floated='right'>
+                        Manage Event
+                    </Button>
+                ) : activity.isGoing ? (
+                    <Button loading={submitting} onClick={cancelAttendance}>Cancel attendance</Button>
+                ) : (
+                    <Button loading={submitting} onClick={attendActivity} color='teal'>Join Activity</Button>
+                )}
             </Segment>
         </Segment.Group>
     )

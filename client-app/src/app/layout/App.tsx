@@ -5,7 +5,6 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import { observer } from 'mobx-react-lite';
 import { Route, Switch } from 'react-router-dom';
 import { HomePage } from '../../features/home/HomePage';
-import ActivityDetailsContainer from '../../features/activities/details/ActivityDetailsContainer';
 import ActivityFormContainer from '../../features/activities/form/ActivityFormContainer';
 import NotFound from './NotFound';
 import { ToastContainer } from 'react-toastify';
@@ -13,6 +12,7 @@ import { LoginForm } from '../../features/user/LoginForm';
 import { RootStoreContext } from '../stores/rootStore';
 import { LoadingComponent } from './LoadingComponent';
 import ModalContainer from '../common/modals/ModalContainer';
+import ActivityDetails from '../../features/activities/details/ActivityDetails';
 
 const App = () => {
     const rootStore = useContext(RootStoreContext);
@@ -40,7 +40,7 @@ const App = () => {
                     <Switch>
                         <Route exact path='/' component={HomePage} />
                         <Route exact path='/activities' component={ActivityDashboard} />
-                        <Route path='/activities/:id' component={ActivityDetailsContainer} />
+                        <Route path='/activities/:id' component={ActivityDetails} />
                         <Route path={['/createActivity', '/edit/:id']} component={ActivityFormContainer} /> 
                         <Route path='/login' component={LoginForm}/>
                         <Route component={NotFound}/>
