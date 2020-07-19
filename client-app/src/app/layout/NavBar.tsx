@@ -2,6 +2,7 @@ import React from 'react'
 import { Menu, Container, Button, Dropdown, Image } from 'semantic-ui-react'
 import { NavLink, Link, useHistory } from 'react-router-dom'
 import { IUser } from '../models/IUser'
+import { observer } from 'mobx-react-lite'
 
 interface IProps {
     logout: () => void;
@@ -9,7 +10,7 @@ interface IProps {
     user: IUser | null;
 }
 
-export const NavBar: React.FC<IProps> = ({ logout, isLoggedIn, user }) => {
+const NavBar: React.FC<IProps> = ({ logout, isLoggedIn, user }) => {
     const history = useHistory();
     const handleLogout = () => {
         logout();
@@ -41,8 +42,17 @@ export const NavBar: React.FC<IProps> = ({ logout, isLoggedIn, user }) => {
                         <Image avatar spaced='right' src={user.image || '/assets/user.png'} />
                         <Dropdown pointing='top left' text={user.displayName}>
                             <Dropdown.Menu>
-                                <Dropdown.Item as={Link} to={`/profile/${user.username}`} text='My profile' icon='user'/>
-                                <Dropdown.Item onClick={handleLogout} text='Logout' icon='power' />
+                                <Dropdown.Item 
+                                    as={Link} 
+                                    to={`/profile/${user.username}`} 
+                                    text='My profile' 
+                                    icon='user'
+                                />
+                                <Dropdown.Item 
+                                    onClick={handleLogout} 
+                                    text='Logout' 
+                                    icon='power' 
+                                />
                             </Dropdown.Menu>
                         </Dropdown>
                     </Menu.Item>
@@ -51,3 +61,5 @@ export const NavBar: React.FC<IProps> = ({ logout, isLoggedIn, user }) => {
         </Menu>
     )
 }
+
+export default observer(NavBar);

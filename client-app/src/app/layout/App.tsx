@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Container } from 'semantic-ui-react';
-import { NavBar } from './NavBar';
+import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { observer } from 'mobx-react-lite';
 import { Route, Switch } from 'react-router-dom';
@@ -8,11 +8,11 @@ import { HomePage } from '../../features/home/HomePage';
 import ActivityFormContainer from '../../features/activities/form/ActivityFormContainer';
 import NotFound from './NotFound';
 import { ToastContainer } from 'react-toastify';
-import { LoginForm } from '../../features/user/LoginForm';
 import { RootStoreContext } from '../stores/rootStore';
 import { LoadingComponent } from './LoadingComponent';
 import ModalContainer from '../common/modals/ModalContainer';
 import ActivityDetails from '../../features/activities/details/ActivityDetails';
+import ProfilePage from '../../features/profiles/ProfilePage';
 
 const App = () => {
     const rootStore = useContext(RootStoreContext);
@@ -42,7 +42,7 @@ const App = () => {
                         <Route exact path='/activities' component={ActivityDashboard} />
                         <Route path='/activities/:id' component={ActivityDetails} />
                         <Route path={['/createActivity', '/edit/:id']} component={ActivityFormContainer} /> 
-                        <Route path='/login' component={LoginForm}/>
+                        <Route path='/profile/:username' component={ProfilePage}/>
                         <Route component={NotFound}/>
                     </Switch>
                 </Container>
