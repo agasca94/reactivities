@@ -3,7 +3,7 @@ import { IActivity } from '../models/IActivity';
 import { history } from '../..';
 import { toast } from 'react-toastify'
 import { IUser, IUserFormValues } from '../models/IUser';
-import { IProfile, IPhoto } from '../models/IProfile';
+import { IProfile, IPhoto, IProfileFormValues } from '../models/IProfile';
 
 const ms = 1000;
 
@@ -79,6 +79,7 @@ const Profiles = {
     uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos', photo),
     setMainPhoto: (id: string) => requests.post(`/photos/${id}/setmain`, {}),
     deletePhoto: (id: string) => requests.del(`/photos/${id}`),
+    update: (profile: Partial<IProfile>) => requests.put('profiles', profile),
 }
 
 export default {

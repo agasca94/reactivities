@@ -1,6 +1,6 @@
 import { RootStore } from "./rootStore";
 import { observable, action, runInAction, computed } from "mobx";
-import { IProfile, IPhoto } from "../models/IProfile";
+import { IProfile, IPhoto, IProfileFormValues } from "../models/IProfile";
 import agent from "../api/agent";
 
 export default class ProfileStore {
@@ -13,6 +13,7 @@ export default class ProfileStore {
     @observable profile: IProfile | null = null;
     @observable loadingProfile = false;
     @observable loadingPhoto = false;
+    @observable submitting = false;
 
     @computed get isCurrentUser() {
         const user = this.rootStore.userStore.user;
@@ -105,5 +106,27 @@ export default class ProfileStore {
         } runInAction(() => {
             this.loadingPhoto = false;
         });
+    }
+
+    @action editProfile = async(values: Partial<IProfile>) => {
+        this.submitting = true;
+        try {
+            await agent.Profiles.update(values);
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile = {...this.profile, ...values}
+
+                    if (this.isCurrentUser && values.displayName) {
+                        this.rootStore.userStore.user!.displayName = values.displayName;
+                    }
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            runInAction(() => {
+                this.submitting = false;
+            });
+        }
     }
 }
